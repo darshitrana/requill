@@ -1,0 +1,51 @@
+{%- if product.metafields.order_info.return_text != blank  -%}
+<div class="main_shop_date secondary_background">
+  {%- if product.metafields.order_info.shop_text != blank -%}
+  <div class="icon_text_stress">
+    <div class="cart_shop">
+      {% render 'icons' , icons : 'cart_shop'  %}
+      <p class="shop_stress_title">{{ product.metafields.order_info.shop_text }}</p>   
+    </div>
+  </div>
+  {%- endif -%}
+  <div class="free_return">
+    {%- if product.metafields.order_info.return_text != blank  -%}
+    <span class="days_returns">
+      {{ product.metafields.order_info.return_text }}
+    </span> 
+    {%- endif -%}
+    {%- if product.metafields.order_info.icon_text != blank -%}
+    <span class="info_circle" id="product_info_text" >
+      {% render 'icons' , icons : 'info-circle'  %}
+    </span>
+    <span class="product_info_text_delivery">{{ product.metafields.order_info.icon_text }}</span>
+    {%- endif -%}
+  </div>
+  
+  
+  <div class="order_date_info">
+      {%- capture today_hour -%}
+    {{ "now" | date: "%H" }}
+    {%- endcapture -%}
+    {%- capture today_minutes -%}
+    {{ "now" | date: "%M" }}
+    {%- endcapture -%}
+    {%- assign hour = today_hour | plus:0 -%}
+    {%- assign minutes = today_minutes | plus:0 -%}
+    {%- assign sethour = 16 | plus:0 -%}
+      {%- if hour < sethour  -%}
+        <span class="order_info" id="date_tinmers"></span>
+        {%- else -%}
+        <span class="order_info" id="date_tinmer"></span>
+      {%- endif -%}
+  </div>
+  
+  {% comment %}
+  {%- if product.metafields.order_info.order_time != blank -%}
+  <div class="order_date_info">
+   <span class="order_info">{{ product.metafields.order_info.order_time }}.
+  </div>
+  {%- endif -%}
+  {% endcomment %}
+</div>
+{%- endif -%}

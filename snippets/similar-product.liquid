@@ -1,0 +1,58 @@
+<div class="similar_drawer" id="similar-name" data-similar-target>
+  <div class="drawer__overlay" data-similar-close tabindex="-1"></div>
+  <div class="drawer__wrapper">
+    <div class="drawer__header">
+      <div class="drawer__title">
+        {% render 'icons', icons : 'arrow-pre' %}  Similar Products
+      </div>
+      <button class="similar_drawer__close" data-similar-close aria-label="Close Drawer"></button>
+    </div>
+     
+    {% assign counter = 0 %}
+
+        {% capture related_items %}
+        {% assign collection = collections[product.metafields.c_f.customer_viewed] %}
+        <div class="grid__item grid__item--full-width view_similar_product">
+         
+          {% for product in collection.products limit:4 %}
+          {% unless product.handle == current_product.handle %}        
+          {% unless same_type and current_product.type != product.type %}
+          
+            {% render 'product-card',
+            product_card_product: product,
+            media_size: settings.image_ratio,
+            show_secondary_image: settings.show_secondary_image,
+            add_image_padding: settings.add_image_padding,
+            show_vendor: settings.show_vendor,
+            show_image_outline: settings.show_image_outline,
+            show_rating: settings.show_rating,
+            show_swatches: settings.show_variants_swatches
+          %}
+          
+            
+          
+          
+          {% assign counter = counter | plus: 1 %}
+          {% if counter == break_at %}
+          {% break %}
+          {% endif %}
+          {% endunless %}
+          {% endunless %}
+          {% endfor %}
+         
+        
+      </div>
+        {% endcapture %}
+        {% assign related_items = related_items | trim %}
+        {% unless related_items == blank %}
+        <div class="cv_main_related_product wow animated fadeInUp">
+        <!--   <p>Descriptor text if needed</p> -->
+          <div class="customer_recent_product_slider">
+              {{ related_items }}
+          </div>
+        </div>
+        {% endunless %}
+    
+   
+  </div>
+</div>

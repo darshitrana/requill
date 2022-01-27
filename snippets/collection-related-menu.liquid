@@ -1,0 +1,37 @@
+<!-- snippest/collection-related-menu -->
+<div class="collection-navgation-wrapper">
+  {%- if request.path contains '/collections/all'  -%}
+    <span class="menu-item sub-link">
+      All Products
+    </span>
+  {%- else -%}
+    {%- for link in linklists[settings.menu].links -%}
+      {%- if link.active or link.child_active or sub_link.child_active -%}
+        {%- if link.links != blank -%}
+          <span class="menu-item sub-link{% if link.active %} active{% endif %}">
+            <a href="{{ link.url }}" tabindex="0" title="{{ link.url }}">All {{ link.title }} Products</a>
+          </span>
+          {%- for sub_link in link.links -%}
+            {% if link.active or sub_link.child_active %}
+              {%- if sub_link.active or sub_link.child_active or sub_sub_link.child_active -%}
+                {%- for child_sub_link in sub_link.links -%}
+                  <span class="menu-item{% if child_sub_link.active %} active{% endif %}">
+                    <a {% unless child_sub_link.active %}href="{{ child_sub_link.url }}"{% endunless %} tabindex="0" title="{{ child_sub_link.title }}">
+                      {{ child_sub_link.title | escape }}
+                    </a>
+                  </span>
+                {%- endfor -%}
+              {%- else -%}
+                <span class="menu-item{% if child_sub_link.active %} active{% endif %}">
+                  <a {% unless sub_link.active %}href="{{ sub_link.url }}"{% endunless %} tabindex="0" title="{{ sub_link.title }}">
+                    {{ sub_link.title | escape }}
+                  </a>
+                </span>
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+</div>
