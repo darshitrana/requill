@@ -1,0 +1,291 @@
+{{ 'section-contact-form.css' | asset_url | stylesheet_tag }}
+
+<div class="contact page-width page-width--narrow spaced-section">
+  <div class="grid grid--1-col grid--2-col-tablet grid--2-col-desktop cv_contact_outer contactform_left">
+    <div class="grid__item medium-up--seven-tenths contactform_left">
+  <h3 class="title">{{ section.settings.heading | escape }}</h3>
+  {%- if section.settings.text != blank -%}<div class="text">{{ section.settings.text }}</div>{%- endif -%}
+  <div class="contact-form custom-form-design">
+  {%- form 'contact', id: 'ContactForm' -%}
+    {%- if form.posted_successfully? -%}
+      <div class="form-status form-status-list form__message" tabindex="-1" autofocus>{% render 'icon-success' %} {{ 'templates.contact.form.post_success' | t }}</div>
+    {%- elsif form.errors -%}
+      <div class="form__message">
+        <h2 class="form-status caption-large text-body" role="alert" tabindex="-1" autofocus>{% render 'icon-error' %} {{ 'templates.contact.form.error_heading' | t }}</h2>
+      </div>
+      <ul class="form-status-list caption-large" role="list">
+        <li>
+          <a href="#ContactForm-email" class="link">
+            {{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}
+          </a>
+        </li>
+      </ul>
+    {%- endif -%}
+    <div class="contact__fields">
+      <div class="field form-wrap">
+        <input class="field__input form_name" autocomplete="name" type="text" id="ContactForm-name" name="contact[{{ 'templates.contact.form.name' | t }}]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" placeholder="{{ 'templates.contact.form.name' | t }}">
+        <label class="field__label" for="ContactForm-name">{{ 'templates.contact.form.name' | t }}</label>
+        <span class="form-error"></span>
+      </div>
+      <div class="field field--with-error form-wrap">
+        <input
+          autocomplete="email"
+          type="text"
+          id="ContactForm-email"
+          class="field__input form_email"
+          class="field__input"
+          name="contact[email]"
+          spellcheck="false"
+          autocapitalize="off"
+          value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+          aria-required="true"
+          {% if form.errors contains 'email' %}
+            aria-invalid="true"
+            aria-describedby="ContactForm-email-error"
+          {% endif %}
+          placeholder="{{ 'templates.contact.form.email' | t }}"
+        >
+        <label class="field__label" for="ContactForm-email">{{ 'templates.contact.form.email' | t }} {% comment %}<span aria-hidden="true">*</span>{% endcomment %}</label>
+        {%- comment -%}{%- if form.errors contains 'email' -%}
+          <small class="contact__field-error" id="ContactForm-email-error">
+            <span class="visually-hidden">{{ 'accessibility.error' | t }}</span>
+            <span class="form__message">{% render 'icon-error' %}{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}</span>
+          </small>
+        {%- endif -%}{%- endcomment -%}
+        <span class="form-error"></span>
+      </div>
+    </div>
+    <div class="contact__fields">
+    <div class="field form-wrap">
+      <input type="tel" id="ContactForm-phone" class="field__input form_phone" autocomplete="tel" name="contact[{{ 'templates.contact.form.phone' | t }}]" pattern="[0-9\-]*" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}" placeholder="{{ 'templates.contact.form.phone' | t }}">
+      <label class="field__label" for="ContactForm-phone">Mobile</label>
+      <span class="form-error"></span>
+    </div>
+    <div class="field form-wrap">
+      <input type="text" id="ContactForm-OrderNumber" class="field__input form_field" name="contact[OrderNumber]"  placeholder="Order Number">
+      <label class="field__label" for="ContactForm-OrderNumber">Order Number</label>
+      <span class="form-error"></span>
+    </div>
+    </div>
+    <div class="contact__fields">
+      <div class="field form-wrap">
+        <select id="ContactForm-QueryType" name="contact[QueryType]" class="form_field">
+          <option value="">Query Type </option>
+          <option value="Query1">Product Information</option>
+          <option value="Query2">Order Tracking</option>
+          <option value="Query3">Online Payment Information</option>
+          <option value="Query3">Cancel My Order</option>
+          <option value="Query3">Request POD</option>
+          <option value="Query3">Request POD</option>
+        </select>
+        <span class="form-error"></span>
+      </div>
+      <div class="field form-wrap">
+        <input type="text" id="ContactForm-subject" class="field__input form_field" name="contact[subject]"  placeholder="Subject">
+      <label class="field__label" for="ContactForm-subject">Subject</label>
+      <span class="form-error"></span>
+      </div>
+    </div>    
+    <div class="field form-wrap">
+      <textarea
+        rows="10"
+        id="ContactForm-body"
+        class="text-area field__input form_field"
+        name="contact[{{ 'templates.contact.form.comment' | t }}]"
+        placeholder="{{ 'templates.contact.form.comment' | t }}"
+      >
+        {{- form.body -}}
+      </textarea>
+      <label class="form__label field__label" for="ContactForm-body">Message</label>
+      <span class="form-error"></span>
+    </div>
+    <div class="contact__button">
+      <button type="submit" class="button">
+        Submit Now
+      </button>
+    </div>
+  {%- endform -%}
+  </div>
+</div>
+<div class="grid__item medium-up--three-tenths contact_form_right">
+  <div class="cv_contact_right_inner">
+    
+      {% for block in section.blocks %}
+      {% case.block.type %}
+      {% when 'quick_links' %}
+      <div class="quicklink_wrap">
+      {% if block.settings.cta_heading != blank %}
+       <div class="quicklink_heading conatct-info-heading">{%- render 'icons', icons : 'link' -%}  {{ block.settings.cta_heading }}</div>
+      {% endif %}
+      {% if block.settings.cta_text != blank  %}
+        <div class="quick_link_text contact-info-content">{{ block.settings.cta_text }}</div>
+      {% endif %}
+    </div>
+    {% when 'addresses'%}
+    <div class="cv_address_blocks">
+      {% if block.settings.add_heading != blank %}
+      <div class="addtess_heading conatct-info-heading">{%- render 'icons', icons : 'address' -%}{{ block.settings.add_heading }}</div>
+      {% endif %}
+    {% if block.settings.add_title != blank %}
+     <p class="address_title conatct-info-sub-heading">{{ block.settings.add_title }}</p>
+    {% endif %}
+     {% if block.settings.add_content != blank %}
+     <div class="address_content contact-info-content">{{ block.settings.add_content }}</div>
+    {% endif %}
+    </div> 
+    {% when 'email'%}
+    <div class="cv_email_blocks">
+      {% if block.settings.email_heading != blank %}
+      <div class="email_heading conatct-info-heading
+      ">{%- render 'icons', icons : 'email' -%}{{ block.settings.email_heading }}</div>
+      {% endif %}
+      {% if block.settings.email_content != blank %}
+      <div class="email_content contact-info-content">{{ block.settings.email_content }}</div>
+     {% endif %}
+    </div>  
+    {% when 'call'%}
+    <div class="cv_call_blocks">
+      {% if block.settings.call_heading != blank %}
+      <div class="call_heading conatct-info-heading
+      ">{%- render 'icons', icons : 'call' -%} {{ block.settings.call_heading }}</div>
+      {% endif %}
+    {% if block.settings.call_title != blank %}
+     <p class="call_title conatct-info-sub-heading">{{ block.settings.call_title }}</p>
+    {% endif %}
+     {% if block.settings.call_content != blank %}
+     <div class="call_content contact-info-content">{{ block.settings.call_content }}</div>
+    {% endif %}
+    </div> 
+    {% endcase %}
+    {% endfor %}
+  </div>
+</div>
+<div class="below_content_wrap">
+  {% if section.settings.below_text != blank %}
+   <div class="below_text contact-info-content">{{ section.settings.below_text}}</div>
+  {% endif %}
+  {% if section.settings.below_title != blank %}
+  <div class="below_title">{{ section.settings.below_title}}</div>
+  {% endif %}
+</div>
+</div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.contact-form.name",
+  "tag": "section",
+  "class": "spaced-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Contact form",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "<p>add your content.</p>",
+      "label": "Text"
+    },
+    {
+      "type": "richtext",
+      "id": "below_text",
+      "default": "<p>Add Your Content.</p>",
+      "label": "Below Content"
+    },
+    {
+      "type": "richtext",
+      "id": "below_title",
+      "label": "Below Text"
+    }
+  ],
+  "blocks":[
+      {
+        "type": "quick_links",
+        "name": "Quick Links",
+        "settings": [
+            {
+              "type": "text",
+              "id": "cta_heading",
+              "label": "Heading"
+            },
+            {
+             "type": "richtext",
+              "id": "cta_text",
+              "default": "<p>Add Your Content</p>",
+              "label": "CTA Text"
+             }
+           ]
+         },
+         {
+          "type": "email",
+          "name": "Email",
+          "settings": [
+          {
+            "type": "text",
+            "id": "email_heading",
+            "label": "Heading"
+          },
+          {
+            "type": "richtext",
+              "id": "email_content",
+              "default": "<p>Add Your Content</p>",
+              "label": "Content"
+           }
+             
+          ]
+        }, 
+        {
+          "type": "addresses",
+          "name": "Addresses",
+           "settings":[
+            {
+              "type": "text",
+              "id": "add_heading",
+              "label": "Heading"
+            },
+             {
+              "type": "text",
+                "id": "add_title",
+                "label": "Title"
+             },
+            {
+              "type": "richtext",
+                "id": "add_content",
+                "default": "<p>Add Your Content</p>",
+                "label": "Content"
+             }
+             ]
+         },
+         {
+          "type": "call",
+          "name": "Call",
+           "settings":[
+            {
+              "type": "text",
+              "id": "call_heading",
+              "label": "Heading"
+            },
+             {
+              "type": "text",
+                "id": "call_title",
+                "label": "Title"
+             },
+            {
+              "type": "richtext",
+                "id": "call_content",
+                "default": "<p>Add Your Content</p>",
+                "label": "Content"
+             }
+             ]
+         }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.contact-form.presets.name"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,111 @@
+
+   <div class="page-width">
+    {%- assign Accordian_question_answer = section.settings.Accordian_question_answer -%}
+    <div class="faq_page_wrap">
+      <div class="accordion">
+        {%- assign headfaq = false -%}
+        {%- for block in section.blocks -%}
+          {% if block.type == 'heading' %}
+          {%- if  headfaq == false -%} </div>  {%- endif -%}
+            {%- if headfaq -%}
+              {%- assign headfaq = false -%}
+            {%- endif -%}
+
+                {%- if block.settings.heading -%}
+                  <div class="accordion__title" data-qa-index="{{ forloop.index }}">
+                    {%- assign headfaq = true -%}
+                    <p class="accordion__title__inner">{{ block.settings.heading }} 
+                       {%- render 'icons', icons: 'arrow-down'-%}
+                    </p>
+                  </div>
+                  <div class="accordion__content" style="display: none;" data-qa-index="{{ forloop.index }}">
+                    {%- assign headfaq = false -%}
+                  {% endif %}
+                {% endif %}
+                {% if block.type == 'question' %}
+                  <div class="accordion accordion--nested">
+                    {%- if block.settings.question -%}
+                    <p class="accordion__title"> {{ block.settings.question }} {% render 'plus-icon' %} {% render 'minus-icon' %}</p>
+                    {%- endif -%}
+                    {%- if block.settings.answer -%}
+                        <div class="accordion__content" style="display: none;">
+                          <p>{{ block.settings.answer }}</p>
+                        </div>
+                    {%- endif -%}
+                  </div>
+                {%- endif -%}
+           {%- endfor -%}
+      </div>
+  </div>
+</div>
+ 
+
+{% schema %}
+  {
+    "name": "FAQ",
+    "settings": 
+        [
+          {
+          "type": "checkbox",
+          "id": "Accordian_question_answer",
+          "label": "check",
+          "default": false
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "richtext",
+            "id": "content",
+            "label": "Write your content.."
+          }
+        ],
+    "blocks":[
+          {
+          "type": "heading",
+          "name": "Heading",
+          "settings":
+           [
+            {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading"
+            }
+          ]
+          },
+          {
+          "type": "question",
+          "name": "Questions",
+          "settings":
+            [
+              {
+              "type": "text",
+              "id": "question",
+              "label": "Qustion type here"
+              },
+              {
+              "type": "richtext",
+              "id": "answer",
+              "label": "Type here answer"
+              }
+            ]
+          }
+      ],
+      "presets": [
+          {
+            "name": "faq"
+          }
+      ]
+}
+ 
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
+
+

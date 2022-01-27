@@ -1,0 +1,121 @@
+{% comment %} aaaaqqqq {% endcomment %}
+<div data-section-id="{{ section.id }}" data-section-type="index-icons-with-text-section" class="iconstext__wrapper section__{{ section.id }}  wow animated fadeInUp icon-text-sec-{{ section.id}}">
+  <div class="section__width {% if section.settings.fullwidth == false %} page-width {% endif %}">
+    {% if section.settings.alignment == 'half' %}
+    	{% assign grid_width = 'medium-up--one-half cv_text'  %}
+    {% else %}
+    	{% assign grid_width = 'one-whole'  %}
+    {% endif %}
+    <div class="grid">
+      <div class="grid__item {{ grid_width }}">
+        <div class="icontext__content">
+          {%- if section.settings.title != blank -%}<h3 class="icontext__title">{{ section.settings.title }}</h3>{%- endif -%}
+          {%- if section.settings.text != blank -%}<p class="icontext__text">{{ section.settings.text }}</p>{%- endif -%}
+
+          {%- if section.settings.btn_link != blank -%}<a href="{{section.settings.btn_link}}" class="btn icontext__cta">{{ section.settings.btn_text }}</a>{%- endif -%}    
+        </div>
+      </div>
+      <div class="grid__item medium-up--one-half cv_icon_text">
+        <div class="icontext__icons">
+          {% for block in section.blocks %}
+          <div class="iconstext__inner">
+            {% if block.settings.svg != blank %}
+            {{ block.settings.svg }}
+            {% else %}
+            {% if block.settings.icon != blank %}
+            <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src="{{ block.settings.icon | img_url: 'master' }}">
+            {% endif %}
+            {% endif %}
+            {%- if block.settings.text != blank -%}
+            <h4>{{ block.settings.text }}</h4>
+            {%- endif -%}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "replacement text icon",
+	"class": "icons-with-text-section pp",
+    "settings": [
+      {
+        "type":"checkbox",
+        "id":"fullwidth",
+        "label":"Enable Full Width",
+		"default": false
+      },
+      {
+        "type":"text",
+        "id":"title",
+        "label":"Title",
+        "default":"Banner"
+      },
+      {
+        "type":"richtext",
+        "id":"text",
+        "label":"Text",
+		"default":"<p>Content goes here...</p>"
+      },
+      {
+        "type":"text",
+        "id":"btn_text",
+        "label":"Button Text",
+        "default":"Shop Now"
+      },
+      {
+        "type":"url",
+        "id":"btn_link",
+        "label":"Button Link"
+      },
+      {
+        "type": "select",
+        "id": "alignment",
+        "label": "Grid Layout",
+        "default": "half",
+        "options": [
+          {
+            "value": "full",
+            "label": "100%"
+          },
+          {
+            "value": "half",
+            "label": "50%"
+          }
+        ]
+      }
+	],
+    "blocks":[
+      {
+        "type":"icons",
+        "name":"icons",
+        "settings":[
+          {
+			"type":"image_picker",
+			"id":"icon",
+			"label":"Icon"
+          },
+          {
+			"type":"textarea",
+			"id":"svg",
+			"label":"SVG"
+          },
+          {
+			"type":"text",
+			"id":"text",
+			"label":"Text"
+          }
+        ]
+      }
+    ],
+	"presets":[
+      {
+        "name":"Icons with Text",
+        "category":"Custom"
+      }
+	]
+  }
+{% endschema %}

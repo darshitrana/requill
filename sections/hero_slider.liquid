@@ -1,0 +1,170 @@
+{{ 'hero_slider.css' | asset_url | stylesheet_tag }}
+
+<div class="hero_slider page-width" id="heroslider--{{ section.id  }}">
+
+
+    <div class="hero_sliders">
+      {% for block in section.blocks %}  
+        {% case block.type %}
+
+          {% when 'image_slide' %}  
+              <div class="iamge_div hero-slider-inner">
+                <div>
+                  <h2 class="title">{{ block.settings.image_heading }}</h2>
+                </div>
+                {% if block.settings.image != blank %}
+                <div class="image_cover">
+                  <img src="{{ block.settings.image | img_url : 'master' }}" 
+                  loading="lazy"
+                  alt="{{ block.settings.image.alt | escape }}"
+                  width="{{ block.settings.image.width }}"
+                  height="{{ block.settings.image.width | divided_by: block.settings.image.aspect_ratio }}" class="desktop_slide">
+                  <img src="{{ block.settings.mimage | img_url : 'master' }}" 
+                  loading="lazy"
+                  alt="{{ block.settings.mimage.alt | escape }}"
+                  width="{{ block.settings.mimage.width }}"
+                  height="{{ block.settings.mimage.width | divided_by: block.settings.mimage.aspect_ratio }}" class="mobile_slide">
+                </div>
+                {% else %}
+                <div class="image_cover">
+                  {{ 'lifestyle-2' | placeholder_svg_tag: 'my-custom-class' }}
+                </div>
+
+                {% endif %}
+
+                {% if block.settings.button_link != blank %}<div class="banner__buttons"><a href="{{ block.settings.button_link }}" class="button button--primary">{{ block.settings.button_label }}</a></div>{% endif %}
+              </div>
+
+          {% when 'video_block' %}
+              <div class="video_div hero-slider-inner">
+                <div>
+                  <h2 class="title">{{ block.settings.heading }}</h2>
+                </div>
+                <div class="video_image_banner">
+                  <img class="desktop_slide" src="{{ block.settings.cover_image | img_url : 'master' }}" alt="{{ block.settings.cover_image.alt | escape }}"  width="{{ block.settings.cover_image.width }}" height="{{ block.settings.cover_image.width | divided_by: block.settings.cover_image.aspect_ratio }}">
+                  <img class="mobile_slide" src="{{ block.settings.mcover_image | img_url : 'master' }}" alt="{{ block.settings.mcover_image.alt | escape }}"  width="{{ block.settings.mcover_image.width }}" height="{{ block.settings.mcover_image.width | divided_by: block.settings.mcover_image.aspect_ratio }}">
+                  <span class="js-play-button{% if block.settings.video_section_video_url contains 'youtube' %} youtube_video{% elsif block.settings.video_section_video_url contains 'vimeo' %} vimeo_video{% endif %}">
+                    {%- include 'custom-icon-play' -%}
+                    {%- include 'video-push' -%}
+                  </span>
+                
+                
+                {% if block.settings.video_section_video_url != blank %}
+                
+                {% if block.settings.video_section_video_url contains 'youtube' or block.settings.video_section_video_url contains 'vimeo'  %}
+                  {% if block.settings.video_section_video_url contains "youtube" %}
+                    {% assign video_id = block.settings.video_section_video_url | split : '/watch?v=' | last %}
+                    <iframe class="js-product-video" src="//www.youtube.com/embed/{{ video_id }}?rel=0&showinfo=0&controls=0&vq=720" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
+                  {% endif %}
+                  {% if block.settings.video_section_video_url contains "vimeo" %}
+                    {% assign video_id = block.settings.video_section_video_url | split : 'vimeo.com/' | last %}
+                    <iframe class="js-product-video" src="//player.vimeo.com/video/{{ video_id }}?byline=0&portrait=0&badge=0&muted=1" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay"></iframe>
+                  {% endif %}
+                {% else %}
+                  <video class="js-product-video"  loop muted>
+                    <source type="video/mp4" src="{{block.settings.video_section_video_url}}">
+                  </video>
+                {% endif %}
+              {% endif %}
+            </div>
+            {% if block.settings.button_link != blank %}<div class="banner__buttons"><a href="{{ block.settings.button_link }}" class="button button--primary">{{ block.settings.button_label }}</a></div>{% endif %}
+              </div>
+
+        {% endcase %} 
+      {% endfor %}
+      
+    </div>
+    <div class="appenddots"></div>
+
+</div>
+
+
+{% schema %}
+{
+  "name":"Hero Slider",
+  "tag":"section",
+  "class":"Hero_slider",
+  "settings":[
+    
+  ],
+  "blocks":[
+    {
+      "type":"image_slide",
+      "name":"Image Slide",
+      "settings":[
+        {
+          "type":"image_picker",
+          "id":"image",
+          "label":"Desktop Image"
+        },
+        {
+          "type":"image_picker",
+          "id":"mimage",
+          "label":"Mobile image"
+        },
+        {
+          "type":"text",
+          "id":"image_heading",
+          "default":"Image",
+          "label":"Main Heading"
+        },
+        {
+          "type":"text",
+          "id":"button_label",
+          "default":"Button label",
+          "label":"t:sections.rich-text.blocks.button.settings.button_label.label"
+        },
+        {
+          "type":"url",
+          "id":"button_link",
+          "label":"t:sections.rich-text.blocks.button.settings.button_link.label"
+        }
+      ]
+    },
+    {
+      "type":"video_block",
+      "name":"Video Slide",
+      "settings":[
+        {
+          "type":"text",
+          "id":"video_section_video_url",
+          "default":"https://www.youtube.com/watch?v=_9VUPq3SxOc",
+          "label":"Video URL"
+        },
+        {
+          "type":"text",
+          "id":"heading",
+          "default":"Video",
+          "label":"t:sections.video.settings.heading.label"
+        },
+        {
+          "type":"image_picker",
+          "id":"cover_image",
+          "label":"Video Desktop Image Banner"
+        },
+        {
+          "type":"image_picker",
+          "id":"mcover_image",
+          "label":"Mobile image"
+        },
+        {
+          "type":"text",
+          "id":"button_label",
+          "default":"Button label",
+          "label":"t:sections.rich-text.blocks.button.settings.button_label.label"
+        },
+        {
+          "type":"url",
+          "id":"button_link",
+          "label":"t:sections.rich-text.blocks.button.settings.button_link.label"
+        }
+      ]
+    }
+  ],
+  "presets":[
+    {
+      "name":"Slideshow"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,257 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-product-grid.css' | asset_url | stylesheet_tag }}
+
+<link rel="stylesheet" href="{{ 'component-slider.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'template-collection.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>{{ 'component-slider.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'template-collection.css' | asset_url | stylesheet_tag }}</noscript>
+
+{%- for block in section.blocks -%}
+{%- liquid
+  assign products_to_display = block.settings.collection.all_products_count
+
+  if block.settings.collection.all_products_count > block.settings.products_to_show
+    assign products_to_display = block.settings.products_to_show
+    assign more_in_collection = true
+  endif
+-%}
+{%- endfor -%}
+<div class="collection multi_collection_wrap custom-price-pro-list blog-page-product-collection {% if block.settings.collection.all_products_count > 2 and block.settings.products_to_show > 2 %} page-width-desktop{% endif %}">
+{%- if section.settings.title != blank or section.settings.text != blank -%}
+<div class="title-wrapper-with-link">
+  <h2 class="title">{%- if section.settings.title != blank -%}{{ section.settings.title | escape }}{%- endif -%}</h2>
+ <h6 class="text-content"> {% if section.settings.text != blank %}{{ section.settings.text }}{% endif %} </h6>
+</div>
+{% endif %}
+ {%- for block in section.blocks -%}
+  {%- case block.type -%}
+  {%- when 'text' -%}
+  {%- assign f_collection = collections[block.settings.collection].products -%}
+  {%- if block.settings.show_view_all and more_in_collection -%}
+    <div class="collection__wrap">
+      <div class="view_all_wrap">
+        <a href="{{ f_collection.url }}" class="link underlined-link">View all</a>
+      </div> 
+    </div>
+  {%- endif -%}
+  <slider-component class="slider-mobile-gutter multy_products_wrap">
+    <ul class="container-new grid grid--2-col product-grid{% if products_to_display == 4 or block.settings.collection == blank %} grid--2-col-tablet grid--4-col-desktop{% else %} grid--3-col-tablet{% endif %}{% if products_to_display > 5 %} grid--one-third-max grid--4-col-desktop grid--quarter-max{% endif %}{% if block.settings.collection.all_products_count > 2  or block.settings.products_to_show > 2 %} mobile_details__slider {% endif %}{% if block.settings.show_view_all == false or block.settings.collection.products.size < block.settings.products_to_show %} negative-margin{% endif %}{% if block.settings.show_view_all and block.settings.collection.products.size > block.settings.products_to_show %} negative-margin--small{% endif %}" role="list"> 
+     {%- for product in f_collection limit: block.settings.products_to_show -%}
+        <li class="grid__item">
+          {% render 'product-card',
+            product_card_product: product,
+            media_size: block.settings.image_ratio,
+            show_secondary_image: block.settings.show_secondary_image,
+            add_image_padding: block.settings.add_image_padding,
+            show_vendor: block.settings.show_vendor,
+            show_image_outline: block.settings.show_image_outline,
+            show_rating: block.settings.show_rating,
+            show_swatches: block.settings.show_variants_swatches,
+             label_new = false,
+             product_tag = false
+          %}
+          <form method="post" action="/cart/add">
+            <input name="id" value="{{ product.variants.first.id }}" type="hidden" />
+            <input class="button button--secondary" name="add" value="Move To Cart" type="submit" />
+          </form>
+        </li>
+      {%- else -%}
+        {%- for i in (1..4) -%}
+          <li class="grid__item">
+            {% render 'product-card-placeholder' %}
+          </li>
+        {%- endfor -%}
+      {%- endfor -%}
+    </ul>
+  </slider-component>
+  
+  {%- when 'quiz-content'-%}
+     <div class="quiz_section_wrap center">
+      <div class="page-width quiz_content_color">
+      <div class="quiz_text_wrap">
+        {%- if block.settings.quiz-heading != blank or block.settings.quiz-text != blank -%}
+        <h2 class="quize_title">{{ block.settings.quiz-heading }}</h2>
+        <div class="quiz_text">{{ block.settings.quiz-text }}</div>
+        {%- endif -%} 
+      </div>
+      <div class="quiz_btn_wrap">
+        {%- if block.settings.button_link != blank -%}
+          <a class="quiz_btn_link" href="{{ block.settings.button_link }}">
+        {%- endif -%}
+          {%- if block.settings.button_label != blank -%}
+             <div class="quiz_btn button button--primary">{{ block.settings.button_label }}</div>
+          {%- endif -%}  
+        {%- if block.settings.button_link != blank -%}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>  
+     </div>
+    {%- endcase -%}  
+    <style>
+      .quiz_content_color {
+        background: {{ block.settings.color_heading}};
+    }
+    .multy_products_wrap {
+      background: {{ section.settings.bg_color }};
+    }
+    </style>
+{%- endfor -%}
+</div>
+{% schema %}
+{
+  "name": "Blog Collection Details",
+  "tag": "section",
+  "max_blocks": 9,
+  "class": "spaced-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Featured collection",
+      "label": "t:sections.featured-collection.settings.title.label"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "<p>content</p>",
+      "label": "Content"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "collections",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "t:sections.featured-collection.settings.collection.label"
+        },
+        {
+          "type": "range",
+          "id": "products_to_show",
+          "min": 2,
+          "max": 12,
+          "default": 3,
+          "label": "t:sections.featured-collection.settings.products_to_show.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_view_all",
+          "default": true,
+          "label": "t:sections.featured-collection.settings.show_view_all.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.featured-collection.settings.header.content"
+        },
+        {
+          "type": "select",
+          "id": "image_ratio",
+          "options": [
+            {
+              "value": "adapt",
+              "label": "t:sections.featured-collection.settings.image_ratio.options__1.label"
+            },
+            {
+              "value": "portrait",
+              "label": "t:sections.featured-collection.settings.image_ratio.options__2.label"
+            },
+            {
+              "value": "square",
+              "label": "t:sections.featured-collection.settings.image_ratio.options__3.label"
+            }
+          ],
+          "default": "adapt",
+          "label": "t:sections.featured-collection.settings.image_ratio.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_secondary_image",
+          "default": false,
+          "label": "t:sections.featured-collection.settings.show_secondary_image.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "add_image_padding",
+          "default": false,
+          "label": "t:sections.featured-collection.settings.add_image_padding.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_image_outline",
+          "default": true,
+          "label": "t:sections.featured-collection.settings.show_image_outline.label"
+        },
+        {
+          "type":"checkbox",
+          "id":"show_variants_swatches",
+          "label":"Enable swatches",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_vendor",
+          "default": false,
+          "label": "t:sections.featured-collection.settings.show_vendor.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_rating",
+          "default": false,
+          "label": "t:sections.featured-collection.settings.show_rating.label",
+          "info": "t:sections.featured-collection.settings.show_rating.info"
+        }
+      ]
+    },
+    {
+      "type": "quiz-content",
+      "name": "Quiz Content",
+      "settings": [
+        {
+          "type": "color",
+          "id": "color_heading",
+          "label": "Baclground  Color",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "id": "quiz-heading",
+          "label":"Quiz Heading"
+        }, 
+        {
+          "type": "richtext",
+          "id": "quiz-text",
+          "default": "<p>content</p>",
+          "label": "Quiz Content"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "default": "Button label",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        }
+      ]
+    }  
+  ],    
+  "presets": [
+    {
+      "name": "Blog Collection Details"
+    }
+  ]
+}
+{% endschema %}

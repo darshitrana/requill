@@ -1,0 +1,106 @@
+{% if section.settings.show_brands_slider %}
+<div class="brand_slider_cover">
+<div class="brand_title">
+  <h2 class="gray">{{ section.settings.title  }}</h2>
+</div>
+
+<div data-section-id="{{ section.id }}"  id="slick-{{ section.id }}" class="slickslider brands-responsive{% if section.settings.slideshow_width == 'contained' %} container mb30 {% else %} mt-30 {% endif %}" data-section-type="brands-slideshow-section">  
+  {% for block in section.blocks %}
+    <div class="brand-slide">
+      {% if block.settings.brand_link %}<a href="{{ block.settings.brand_link }}">{% endif %}
+        {% if block.settings.slideshow_image != blank %}
+        <img src="{{ block.settings.slideshow_image | img_url: 'master' }}" alt="{{ block.settings.slideshow_image.alt }}">
+        {% else %}
+        {{ 'logo' | placeholder_svg_tag: 'custom_class'  }}
+        {% endif %}
+      {% if block.settings.brand_link %}</a>{% endif %}
+    </div>
+  {% endfor %}  
+</div>
+</div>
+{% endif %}
+
+
+
+{% schema %}
+{
+  "name":"Brands Slider",
+  "max_blocks":20,
+  "settings":[
+    {
+      "type":"text",
+      "id":"title",
+      "label":"Title"
+    },
+    {
+      "type":"checkbox",
+      "id":"show_brands_slider",
+      "label":"Enable brands slider",
+      "default":true
+    }
+  ],
+  "blocks":[
+    {
+      "type":"brand",
+      "name":"Brand",
+      "settings":[
+        {
+          "type":"header",
+          "content":"Brand"
+        },
+        {
+          "type":"image_picker",
+          "id":"slideshow_image",
+          "label":"Image",
+          "info":"133 x 73px png recommended"
+        },
+        {
+          "type":"url",
+          "id":"brand_link",
+          "label":"Link URL"
+        }
+      ]
+    }
+  ],
+  "presets":[
+    {
+      "name":"Brand Slideshow",
+      "category":"Image",
+      "settings":{
+        
+      },
+      "blocks":[
+        {
+          "type":"brand"
+        },
+        {
+          "type":"brand"
+        },
+        {
+          "type":"brand"
+        },
+        {
+          "type":"brand"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+
+
+{% javascript %}
+
+
+{% endjavascript %}
+
+
+{% stylesheet %}
+.slick-slide img {
+    display: block;
+    text-align: center;
+    margin: auto;
+}
+
+{% endstylesheet %}

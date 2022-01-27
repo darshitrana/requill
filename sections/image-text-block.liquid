@@ -1,0 +1,104 @@
+
+<div class="affilate-page">
+  <div class="page-width">  
+    <div class="get-started-section">
+
+        {% if section.settings.section_heading != blank or section.settings.sub_heading != blank%}
+        <div class="section-heading-part text-center">
+            {% if section.settings.section_heading != blank %}<h2 class="h3 section-heading">{{ section.settings.section_heading }}</h2> {% endif %}
+            {% if section.settings.sub_heading != blank %}<p class="section-sub-heading">{{ section.settings.sub_heading }}</p> {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="grid grid--1-col grid--2-col-tablet grid--3-col-desktop">
+            {% for block in section.blocks %}
+                {% if block.settings.icon_img  != blank or block.settings.block_heading  != blank or block.settings.paragraph  != blank or block.settings.link_text  != blank %}
+                  <div class="grid__item">
+                    <div class="block-inner-background">
+                      {% if block.settings.icon_img  != blank %}
+                        <div class="icon-part"><img src="{{ block.settings.icon_img | img_url: '100x100' }}"></div>
+                      {% endif %}
+                      
+                      {% if block.settings.block_heading  != blank or block.settings.paragraph  != blank %}
+                      <div class="block-text-part">
+                          {% if block.settings.block_heading  != blank %}<h4 class="block-heading">{{ block.settings.block_heading }}</h4>{% endif %}
+                          {% if block.settings.paragraph  != blank %}<p>{{ block.settings.paragraph }}</p>{% endif %}
+                      </div>
+                      {% endif %}
+                      
+                      {% if block.settings.link_text  != blank %}
+                          <div class="link-part">
+                            <a href="{{ block.settings.button_link }}">{{ block.settings.link_text }}</a>
+                          </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+    </div>
+  </div>  
+</div>
+
+{% schema %}
+  {
+    "name": "image with text block",
+    "settings": [
+      {
+        "type": "text",
+        "id": "section_heading",
+        "label": "Heading"
+      },
+      {
+        "type": "text",
+        "id": "sub_heading",
+        "label": "Sub Heading Paragraph"
+      }
+    ],
+    "blocks": [
+     {
+       "name": "image text block",
+       "type": "image_text_block",
+       "settings": [
+         {
+           "type": "image_picker",
+           "id": "icon_img",
+           "label": "Select Icon"
+         },
+         {
+            "type": "text",
+            "id": "block_heading",
+            "label": "Block Heading"
+          },
+         {
+            "type": "richtext",
+            "id": "paragraph",
+            "label": "Paragraph"
+          },
+          {
+            "type": "text",
+            "id": "link_text",
+            "label": "Button Name"
+          },
+          {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button link"
+          }
+       ]
+     }
+   ],
+   "presets": [
+   {
+     "name": "Image with Text Blocks"
+   }
+ ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

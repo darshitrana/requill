@@ -1,0 +1,85 @@
+<section class="testimonial_cover">
+<div class="page-width">
+  <h2>{{ section.settings.title }}</h2>
+  <div class="testimonial">
+    {%- for block in section.blocks -%}
+      <div class="testimonial_quotes">
+        {% if block.settings.quoteimg != blank %}<img src="{{ block.settings.quoteimg | img_url : 'master' }}">{% endif %}
+        {%- if block.settings.quote != blank -%}
+        <p>
+          {{ block.settings.quote }}
+        </p>
+      {%- endif -%}
+        <a href="{{ block.settings.link }}">
+          {{ block.settings.author }}
+        </a>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+</section>
+
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "class": "index-section",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Testimonials"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "quote",
+      "name": "Testimonial",
+      "settings": [
+      
+      {
+        "type": "image_picker",
+        "id": "quoteimg",
+        "label": "Quote image"
+      },      
+        {
+          "type": "richtext",
+          "id": "quote",
+          "label": "Text",
+          "default": "<p>Add customer reviews and testimonials to showcase your store’s happy customers.</p>"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author",
+          "default": "Author’s name"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "category": "Text",
+      "blocks": [
+        {
+          "type": "quote"
+        },
+        {
+          "type": "quote"
+        },
+        {
+          "type": "quote"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

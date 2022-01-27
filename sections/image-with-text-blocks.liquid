@@ -1,0 +1,121 @@
+<div class="collection-list-wrapper  {% if section.settings.custom_class != blank %}{{ section.settings.custom_class }}{% endif %} {% unless section.settings.enable_full_width %}page-width{% endunless %}">
+  <div class="slider-mobile-gutter">
+    {%- if section.settings.title != blank -%}
+    <div class="image_text_title">{{ section.settings.title }}</div>
+    {%- endif -%}
+    <ul class="collection-list grid  grid--1-col{% if section.blocks.size < 5 %}  grid--{{ section.blocks.size }}-col-tablet{% else %}  grid--3-col-tablet{% endif %} collection-list--{{ section.blocks.size }}-items"
+      id="Slider-{{ section.id }}"
+      role="list"
+    >
+      {%- for block in section.blocks -%}
+        <li class="Image_text__blocks_wrapper grid__item" {{ block.shopify_attributes }}>
+            <div class="card--stretch card-colored">
+              {%- if block.settings.image != blank -%}
+                  <div class="image_blocks_wrapper" {% if block.settings.image_ratio == 'adapt' and section.blocks.size > 1 %}{% endif %}>
+                   <img
+                      src="{{ block.settings.image | img_url: 'master' }}"
+                      alt="{{ block.settings.image.alt  }}"
+                      loading="lazy"
+                      class="image_block_wrap"
+                    >
+                  </div>
+                <div class="card__text card__text-spacing card-colored card__text-hover">
+                  {%- if block.settings.image_text != blank -%}
+                    <h3><span>{{ block.settings.image_text | escape }}</span></h3>    
+                  {%- endif -%}
+                  {% if block.settings.button_link != blank  %}<a href="{{ block.settings.button_link }}" class="text_block_link">{% endif  %}
+                    {% if block.settings.button_label != blank %} 
+                      <div class="block_btn_label">{{ block.settings.button_label }}</div>
+                    {% endif %}
+                  {% if block.settings.button_link != blank %}</a>{% endif %}
+                </div>
+              {%- endif -%}
+            </div>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image With Text Blocks",
+  "tag": "section",
+  "class": "spaced-section Image-text-section",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom Class"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_full_width",
+      "label": "Enable Full Width",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Title",
+      "label": "Heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "image_ratio",
+          "options": [
+            {
+              "value": "adapt",
+              "label": "t:sections.collection-list.settings.image_ratio.options__1.label"
+            },
+            {
+              "value": "portrait",
+              "label": "t:sections.collection-list.settings.image_ratio.options__2.label"
+            },
+            {
+              "value": "square",
+              "label": "t:sections.collection-list.settings.image_ratio.options__3.label"
+            }
+          ],
+          "default": "square",
+          "label": "t:sections.collection-list.settings.image_ratio.label",
+          "info": "t:sections.collection-list.settings.image_ratio.info"
+        },
+        {
+          "type": "text",
+          "id": "image_text",
+          "label": "Text"
+        },
+        {
+          "type":"text",
+          "id":"button_label",
+          "default":"Shop Now",
+          "label":"Text Label"
+        },
+        {
+          "type":"url",
+          "id":"button_link",
+          "label":"Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with Text Blocks"
+    }
+  ]
+}
+{% endschema %}

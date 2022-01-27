@@ -1,0 +1,275 @@
+{{ 'component-article-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'section-main-blog.css' | asset_url | stylesheet_tag }}
+  
+    
+
+{% comment %}
+<div class="blog main-blog page-width">
+  <div class="title-wrapper-with-link">
+    <h2 class="blog__title">{{ section.settings.heading | escape }}</h2>
+    {%- if section.settings.content != blank -%}<h6 class="blog_desc">{{ section.settings.content}}</h6>{%- endif -%}
+  </div>     
+      {%- for article in blog.articles -%}
+        {%- for tag in article.tags -%}
+          {%- assign tag_downcase = tag | downcase -%}
+          {%- if tag_downcase == 'skin' -%}
+            {%- capture skinArticle -%}
+              {{ skinArticle }}
+              <div class="blog__post article">
+                {% render 'article-card', blog: blog, article: article, show_image: section.settings.show_image, show_date: section.settings.show_date, show_author: section.settings.show_author %}
+              </div>
+              
+            {%- endcapture -%}
+          {%- elsif tag_downcase == 'hair' -%}
+            {%- capture hairArticle -%}
+              {{ hairArticle }}
+              {% render 'article-card', blog: blog, article: article, show_image: section.settings.show_image, show_date: section.settings.show_date, show_author: section.settings.show_author %}
+            {%- endcapture -%}
+          {%- elsif tag_downcase == 'body' -%}
+            {%- capture bodyArticle -%}
+              {{ bodyArticle }}
+              {% render 'article-card', blog: blog, article: article, show_image: section.settings.show_image, show_date: section.settings.show_date, show_author: section.settings.show_author %}
+            {%- endcapture -%}
+          {%- elsif tag_downcase == 'regimes' -%}
+            {%- capture regimesArticle -%}
+              {{ regimesArticle }}
+              {% render 'article-card', blog: blog, article: article, show_image: section.settings.show_image, show_date: section.settings.show_date, show_author: section.settings.show_author %}
+            {%- endcapture -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endfor -%}
+      {%- unless skinArticle == '' -%}
+        <div class="multi_block_wrap">
+          <div class="multi_block_title"><h3>skin</h3></div>
+          <div class="multi_block_content">
+            <div class="blogs_slider  {% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
+              
+                {{skinArticle}}
+              
+              
+            </div>
+          </div>
+        </div>
+      {%- endunless -%}
+      {%- unless hairArticle == '' -%}
+        <div class="multi_block_wrap">
+          <div class="multi_block_title"><h3>Hair</h3></div>
+          <div class="multi_block_content">
+            <div class="blog-articles {% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
+              {{hairArticle}}
+            </div>
+          </div>
+        </div>
+      {%- endunless -%}
+      {%- unless bodyArticle == '' -%}
+        <div class="multi_block_wrap">
+          <div class="multi_block_title"><h3>Body</h3></div>
+          <div class="multi_block_content">
+            <div class="blog-articles {% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
+              {{bodyArticle}}
+            </div>
+          </div>
+        </div>
+      {%- endunless -%}
+      {%- unless regimesArticle == '' -%}
+        <div class="multi_block_wrap">
+          <div class="multi_block_title"><h3>Regimes</h3></div>
+          <div class="multi_block_content">
+            <div class="blog-articles {% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
+              {{regimesArticle}}
+            </div>
+          </div>
+        </div>
+      {%- endunless -%}
+      </div>
+      {% endcomment %}
+
+      
+
+
+      
+      
+      
+    
+      
+      
+
+
+  <div class="blog">
+    <div class="page-width">
+      <div class="title-wrapper-with-link">
+        <h2 class="h3 blog_page_main_title">{{ section.settings.heading | escape }}</h2>
+        {%- if section.settings.content != blank -%}<h6 class="blog_desc">{{ section.settings.content}}</h6>{%- endif -%}
+      </div> 
+      
+        <ul class="blog__posts_list blog__posts articles-wrapper blogs_slider" style="padding: 0;">
+          {%- assign customFilterTags = section.settings.blog_filter | split: ',' -%}
+          {%- assign current_tags_handle = current_tags | handle -%}
+          {%- for customFilter in customFilterTags -%}
+          {% for tag in blog.all_tags %}
+          {%- assign tag_handle = tag | handle -%}
+              {%- assign customFilter_handle = customFilter | handle -%}
+              {% assign current_tag = tag %}
+              {%- if tag_handle == customFilter_handle -%}
+
+              {%- capture articleGrid -%}
+                {% for article in blog.articles %}
+                    {% if article.tags contains current_tag %}
+                        <li class="blog__post article" style="list-style: none;">
+                          {% render 'article-card', blog: blog, article: article, show_image: section.settings.show_image, show_date: section.settings.show_date, show_author: section.settings.show_author , show_excerpt: section.settings.show_excerpt %}
+                        <label class="image-label">{{ tag }}</label>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+              {%- endcapture -%}
+
+              <li class="question" style="list-style: none;">
+                {%- if articleGrid != blank -%}
+                <h2 class="h5 blog-list-title">{{ tag }}</h2>
+                {%- endif -%}
+                <ul class="custom-tabs" style="padding: 0;">
+                {% assign custom_tags = '' %}
+                {% for article in blog.articles %}
+                {% if article.tags contains current_tag %}
+                {% for tagssssss in article.tags %}
+                  {% assign tegs = tagssssss %}
+                    {% unless custom_tags contains tegs %}
+                      {% assign custom_tags = custom_tags | join: ',' %}
+                      {% assign custom_tags = custom_tags | append: ',' | append: tegs %} 
+                      {% assign custom_tags = custom_tags | split: ',' %}
+                      {% assign teg_handles = tegs | handle %}
+                      {%- capture blogurl -%}
+                      {{ blog.url }}/tagged/{{ tegs | handle }}
+                      {%- endcapture -%}
+                      {% assign blogurlcapture =  blogurl | split: '/' | last %}
+                      {%- capture Current_Tag_Handle -%}
+                      {{ current_tags | handle}}
+                      {%- endcapture -%}
+                      <li style="list-style: none;" class="{% if blogurlcapture == Current_Tag_Handle %}active{% endif %}">
+                        <a href="{{ blog.url }}/tagged/{{ tegs | handle }}">{{ tegs }}</a>
+                      </li>
+                    {% endunless %}
+                {% endfor %}
+                {% endif %}
+                {% endfor %}
+                </ul>
+                {%- if articleGrid != blank -%}
+                <ul id="{{ tag | handle }}" class="sub-question-list " style="padding: 0;">
+                    {{articleGrid}}
+                </ul>
+                {%- endif -%}
+            </li>
+              {%- endif -%}
+              
+          {% endfor %}
+          {%- endfor -%}
+          
+        </ul>
+    </div>
+  </div>
+
+<script>
+$(document).ready(function(){ 
+// blog slider 
+// blog slider 
+$('.sub-question-list').slick({
+  dots: false,
+  infinite: true,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  prevArrow: "<button type='button' class='slick-prev pull-left'><img src='https://cdn.shopify.com/s/files/1/0306/6262/3364/files/left_arrow.png?v=1638268785'></button>",
+	nextArrow: "<button type='button' class='slick-next pull-right'><img src='https://cdn.shopify.com/s/files/1/0306/6262/3364/files/right_arrow.png?v=1638268785'></button>",
+  arrows: true,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: true
+        }
+      }, 
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          arrows: false,
+          dots: true
+        }
+      }, 
+      {
+        breakpoint: 598,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          arrows: false,
+          dots: true
+        }
+      }
+    ]
+});
+});
+</script>
+{% schema %}
+{
+  "name": "Multi Blog Slider",
+  "tag": "section",
+  "class": "spaced-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.main-blog.settings.header.content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Blog posts",
+      "label": "t:sections.featured-blog.settings.heading.label"
+    },
+    {
+      "type": "text",
+      "id": "content",
+      "label": "content"  
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "default": true,
+      "label": "t:sections.main-blog.settings.show_image.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "default": true,
+      "label": "t:sections.main-blog.settings.show_date.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "default": false,
+      "label": "t:sections.main-blog.settings.show_author.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "default": false,
+      "label": "Show Excerpt"
+    },
+    
+    {
+      "type":"textarea",
+      "id": "blog_filter",
+      "label":"Show Tab",
+      "default": "<p>Hyperpigmentation,Dark Underarms</p>",
+      "info": "EX. Hyperpigmentation,Dark Underarms"
+   }
+  ],
+  "presets": [
+    {
+      "name": "Multi Blog Slider"
+    }
+  ]
+}
+{% endschema %}

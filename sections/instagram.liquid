@@ -1,0 +1,262 @@
+<style>#insta-feed{width:{{section.settings.feed_width}}%;}#insta-feed h2{font-size:{{section.settings.heading_size}}px;font-family: {{section.settings.heading_font.family }};}{{ section.settings.heading_font | font_face }}</style>
+<div class="insta-container page-width">
+{{section.settings.html_area}}
+{% unless section.settings.html_area contains "feed-" %}<div id="insta-feed"></div>{% endunless  %}
+{%- if section.settings.button_label != blank or section.settings.button_link !=  blank -%}
+      <a href="{{ section.settings.button_link }}" class="insta_btn_link button button--secondary" target="_blank">{{ section.settings.button_label | escape }}{%- render 'icons', icons : 'instagram' -%}</a>
+{%- endif -%}
+</div>
+{%schema%}
+{
+  "name":"Instafeed App",
+  "settings":[
+  {
+    "type":"font_picker",
+    "label":"Heading font.",
+    "id":"heading_font",
+    "default": "helvetica_n4"},
+    {"type":"range",
+    "id":"heading_size",
+    "min":10,
+    "max":30,
+    "step":1,
+    "unit":"px",
+    "label":"Heading Size",
+    "default":20
+   },
+   {
+     "type":"range",
+     "id":"feed_width",
+     "min":50,
+     "max":100,
+     "step":5,
+     "unit":"%",
+     "label":"Feed Width",
+     "default":100
+    },
+    {
+      "type":"textarea",
+      "id":"html_area",
+      "label":"Custom Code (optional)"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Follow us",
+      "label": "t:sections.image-banner.blocks.buttons.settings.button_label_1.label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:sections.image-banner.blocks.buttons.settings.button_link_1.label"
+    }
+  ],
+  "presets":[
+  {
+    "name":"Instafeed App",
+    "category":"Instagram Feed"
+  }
+  ]
+}{%endschema%}
+<script>
+  var div_found = 0;
+var myInterval = setInterval(function () {
+            if(div_found){
+              	clearInterval(myInterval);
+            }else{
+              if($("#insta-feed .instafeed-container").length > 0){
+                console.log('Found');
+                div_found = 1;
+                setTimeout(function(){ 
+                  	$('#insta-feed').prepend('<div class="insta-slider"></div>');
+                    $('#insta-feed > a').each(function () {
+                        if(!$(this).hasClass('instafeed-lightbox')){
+                            $('.insta-slider').append($(this));
+                        }
+                    }); 
+                    $('.insta-slider').slick({
+                        infinite: true,
+                        speed: 300,
+                        slidesToShow: 3,
+                        slidesToScroll: 1,
+                        arrows: false,
+                        responsive: [
+                          {
+                            breakpoint: 1024,
+                            settings: {
+                              slidesToShow: 3,
+                              slidesToScroll: 1,
+                              infinite: true,
+                              dots: false
+                            }
+                          },
+                          {
+                            breakpoint:767,
+                            settings: {
+                              slidesToShow: 1,
+                              slidesToScroll:1,
+                              dots: true
+                            }
+                          }
+                        ]
+
+                    });
+                  $('.insta-slider .slick-slide img').each(function() {
+                      if( $(this).attr('src').indexOf('pixel.gif') > -1 ){
+                          $(this).attr('src',$(this).attr('data-src'));
+                      }
+                  });
+                }, 1500);
+              }else{
+                console.log('div not found');
+              }
+            }
+      
+        },1000);
+
+</script>
+
+<style>
+  #insta-feed{
+   margin-bottom:35px;
+   padding: 10px 0 0 0 !important;
+   display: inline-block;
+  }
+  .insta_btn_link svg {
+    width: 16px;
+    height: 16px;
+    margin-left: 10px;
+}
+  .insta_btn_link {
+    margin: 0 auto;
+    display: flex;
+    width: 168px;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+}
+
+  .insta-container {
+      max-width: 1094px;
+  }
+
+  #insta-feed img, .instafeed-shopify img {
+    width: 100% !important;
+    height:100% !important;
+    padding: 0 10px;
+}
+  
+.insta-slider .slick-track .slick-slide .instafeed-container{
+    width:100%!important;
+    padding-top:95%!important
+}
+.insta-slider .slick-list {
+    margin: 0 -10px;
+}
+
+.insta-slider .slick-arrow{
+    position:absolute;
+    top:calc(50% - (45px / 2));
+    z-index:4;
+    -webkit-box-shadow:0 2px 10px rgba(54,54,54,.15);
+    box-shadow:0 2px 10px rgba(54,54,54,.15);
+    border-radius:50%;
+    background:#fff;
+    color:#e2c496;
+    width:45px;
+    height:45px;
+    -webkit-transform:scale(1.001);
+    transform:scale(1.001);
+    -webkit-transition:background .15s ease-in-out,opacity .15s ease-in-out,color .2s ease-in-out,-webkit-transform .2s ease-in-out;
+    transition:background .15s ease-in-out,opacity .15s ease-in-out,color .2s ease-in-out,-webkit-transform .2s ease-in-out;
+    transition:background .15s ease-in-out,opacity .15s ease-in-out,transform .2s ease-in-out,color .2s ease-in-out;
+    transition:background .15s ease-in-out,opacity .15s ease-in-out,transform .2s ease-in-out,color .2s ease-in-out,-webkit-transform .2s ease-in-out;
+    overflow:hidden;
+    font-size:0
+}
+@media not all,(hover:hover){
+    .insta-slider .slick-arrow:hover{
+        -webkit-transform:scale(1.1);
+        transform:scale(1.1)
+    }
+    .insta-slider .slick-arrow:hover svg{
+        -webkit-animation:buttonFromLeftToRight .5s ease-in-out forwards;
+        animation:buttonFromLeftToRight .5s ease-in-out forwards
+    }
+}
+.insta-slider .slick-arrow svg{
+    width:18px;
+    fill:#c3a69b
+}
+.insta-slider .slick-arrow.previous{
+    left:30px!important
+}
+.insta-slider .slick-arrow.next{
+    right:30px!important
+}
+  
+@media only screen and (max-width:1199px){
+    #insta-feed{
+     margin-bottom: 60px;
+  }
+}
+  
+@media only screen and (max-width:767px){
+    #insta-feed{
+     margin-bottom: 10px; 
+     margin-top: 10px;
+  }
+  .insta-slider {
+      padding: 0 10px;
+  }
+
+  .insta-slider .slick-dots {margin: 0 0 !important; left: 0;}  
+  .insta-slider .slick-dots li {
+    margin: 0 2px !important;
+    width: 4px;
+    height: 4px;
+    background-color: #bdbdbd;
+    border-radius: 50%;
+  }
+  .insta-slider .slick-dots li button {
+    padding: 0 0 !important;
+    width: 4px !important;
+    height: 4px !important;
+  }
+  .insta-slider .slick-dots .slick-active button {
+    width: 13px !important;
+    background: #272727;
+    margin: 0;
+    border-radius: 20px;
+  }
+  .insta-slider .slick-dots li button:before{
+    display: none;
+  }
+  .insta-slider .slick-dots .slick-active{
+    width: 13px;
+    height: 4px;
+    margin: 0 4px 0 0;
+    border-radius: 20px;
+  }
+
+  .insta_btn_link{
+    background-color: var(--color-base-primary-color);
+    color: var(--color-base-primary-text-color);
+  }
+  .insta_btn_link svg path {
+    fill: var(--color-base-primary-text-color);
+  }
+  .insta_btn_link:hover{
+    background-color:transparent;
+    color: var(--color-base-primary-color);
+  }
+  .insta_btn_link:hover svg path {
+    fill: var(--color-base-primary-color) !important;
+  }
+
+  .insta-slider .slick-track .slick-slide .instafeed-container{
+    padding-top: 90%!important;
+  }
+}
+  
+</style>

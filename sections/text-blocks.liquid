@@ -1,0 +1,110 @@
+<div class="{% unless section.settings.full_width %}page-width page-width-secondary{% endunless %} abt--{{ section.id }} ">
+  <div class="about text-blocks  {% if section.settings.full_width %} rich-text--full-width{% endif %}">
+    <div class="texts__blocks">
+      {%- for block in section.blocks -%}               
+            {%- if block.settings.heading != blank or block.settings.text != blank -%}
+              <div class="text_blocks__wrap ">         
+                <h2 class="h3" {{ block.shopify_attributes }}>{{ block.settings.heading  }}</h2>      
+                <div class="text-wrap" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>  
+              </div> 
+          {%- endif -%}      
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<style>
+.abt--{{ section.id }}{
+margin-top: {{ section.settings.spacing_top }}px;
+margin-bottom: {{ section.settings.spacing_bottom }}px;  
+}
+@media screen and (max-width: 749px){
+
+.abt--{{ section.id }}{
+margin-top: {{ section.settings.mspacing_top }}px;
+margin-bottom: {{ section.settings.mspacing_bottom }}px;  
+}
+}
+</style>
+
+{% schema %}
+{
+  "name": "Text Blocks",
+  "tag": "section",
+  "max_blocks": 4,
+  "class": "spaced-section spaced-section--full-width",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "default": true,
+      "label": "t:sections.rich-text.settings.full_width.label"
+    },
+    {
+      "type": "range",
+      "id": "spacing_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop Spacing Top",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "spacing_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop Spacing Bottom",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "mspacing_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile Spacing Top",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "mspacing_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile Spacing Bottom",
+      "default": 100
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+      {
+        "type": "text",
+        "id": "heading",
+        "default": "Talk about your brand",
+        "label": "Heading"
+      },
+      {
+        "type": "richtext",
+        "id": "text",
+        "default": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>",
+        "label": "Content"
+      }
+     ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Text Blocks"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,70 @@
+<div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+  <div class="icon-with-text  {% if section.settings.full_width %} rich-text--full-width{% endif %}">
+    <div class="image-text__blocks">
+      {%- for block in section.blocks -%}               
+            {%- if block.settings.logo != blank -%}
+              <div class="custom-block2">
+              <img 
+                src="{{ block.settings.logo | img_url: 'master' }}"
+                class="text-logo_left"
+                alt="{{ block.settings.logo.alt | default: shop.name | escape }}"
+              >
+            {%- endif -%}
+            {%- if block.settings.heading != blank or block.settings.text != blank -%}
+              <div class="text_title__right ">         
+                <div class="icon-heading" {{ block.shopify_attributes }}>{{ block.settings.heading  }}</div>      
+                <div class="icon-text" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>  
+              </div> 
+              </div>
+          {%- endif -%}      
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Icon with Text",
+  "tag": "section",
+  "max_blocks": 4,
+  "class": "spaced-section spaced-section--full-width",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "default": true,
+      "label": "t:sections.rich-text.settings.full_width.label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Icon with Text",
+      "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Icon"
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "default": "Talk about your brand",
+        "label": "Heading"
+      },
+      {
+        "type": "richtext",
+        "id": "text",
+        "default": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>",
+        "label": "Content"
+      }
+     ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Icon With Text"
+    }
+  ]
+}
+{% endschema %}

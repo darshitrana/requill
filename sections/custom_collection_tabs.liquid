@@ -1,0 +1,512 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-product-grid.css' | asset_url | stylesheet_tag }}
+
+<link rel="stylesheet" href="{{ 'component-slider.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'template-collection.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<noscript>{{ 'component-slider.css' | asset_url | stylesheet_tag }}</noscript>
+<noscript>{{ 'template-collection.css' | asset_url | stylesheet_tag }}</noscript>
+
+{%- liquid
+  assign products_to_display = section.settings.collection.all_products_count
+
+  if section.settings.collection.all_products_count > section.settings.products_to_show
+    assign products_to_display = section.settings.products_to_show
+    assign more_in_collection = true
+  endif
+-%}
+<div class="collection page-width{% if section.settings.swipe_on_mobile == true and section.settings.collection.all_products_count > 2 and section.settings.products_to_show > 2 %} page-width-desktop{% endif %}">
+  <div class="title-wrapper-with-link{% if section.settings.title == blank %} title-wrapper-with-link--no-heading{% endif %}{% if section.settings.collection.all_products_count > 2 and section.settings.swipe_on_mobile and section.settings.products_to_show > 2 %} title-wrapper--self-padded-tablet-down{% endif %} custom_collection_tabs">
+    <h2 class="title{% if section.settings.title == blank %} title--no-heading{% endif %} gray">{{ section.settings.title }}</h2>
+        {% if section.settings.description != blank %}
+          <div class="description_collections body_text_gray">
+            {{ section.settings.description }}
+          </div>
+        {% endif %}
+  </div>
+
+  
+  <div class="tab_section_bar">
+
+
+
+    <div class="tabs_navs">
+      {% for block in section.blocks %}
+      {% if block.settings.tabs != blank or block.settings.collection != blank %}
+      <button data-toggle="tab" data-tabs=".gtabs.demo" data-tab=".tab-{{ forloop.index }}" class="button btn btn-info {% if forloop.index == 1 %} selected {% endif %}" >{% if block.settings.tabs != blank %}{{ block.settings.tabs }}{% else %} {{ block.settings.collection }} {% endif %}</button>
+      {% endif %}
+      {% endfor %}
+    </div>
+    
+    <div class="gtabs demo">
+
+
+      {% for block in section.blocks %}
+      
+        <div class="gtab {% if forloop.index == 1 %} active {% endif %} tab-{{ forloop.index }} collection-wrapper">
+          {% if block.settings.tabs1 != blank %}
+          <ul class="subcollections_tabs" >
+          {% if block.settings.tabs1 != blank %}
+          <li class="active tab-header" data-tab-val="{{ block.settings.tabs1 | handleize }}">
+          <span >{{ block.settings.tabs1  }}</span>
+          </li>
+          {% endif %}
+          {% if block.settings.tabs2 != blank %}
+          <li class="tab-header" data-tab-val="{{ block.settings.tabs2 | handleize }}">
+          <span >{{ block.settings.tabs2  }}</span>
+          </li>
+          {% endif %}
+          {% if block.settings.tabs3 != blank %}
+          <li class="tab-header" data-tab-val="{{ block.settings.tabs3 | handleize }}">
+          <span >{{ block.settings.tabs3  }}</span>
+          </li>
+          {% endif %}
+          {% if block.settings.tabs4 != blank %}
+          <li class="tab-header" data-tab-val="{{ block.settings.tabs4 | handleize }}">
+          <span >{{ block.settings.tabs4  }}</span>
+          </li>
+          {% endif %}
+          {% if block.settings.tabs5 != blank %}
+          <li class="tab-header" data-tab-val="{{ block.settings.tabs5 | handleize }}">
+          <span >{{ block.settings.tabs5  }}</span>
+          </li> 
+          {% endif %}
+          </ul>
+          {% endif %}
+
+         
+<div class="tab_collection_cover">
+  <div class="c_tabs collection_tab_1 tabss-1 active" data-body-val="{{ block.settings.tabs1 | handleize }}">
+    <!-- Collection 1 -->
+    {% if block.settings.collection1 != "blank" %}
+
+      <ul class="grid grid--2-col product-grid{% if products_to_display == 4 or block.settings.collection1 == blank %} grid--2-col-tablet grid--4-col-desktop{% else %} grid--3-col-tablet{% endif %}{% if products_to_display > 5 %} grid--one-third-max grid--4-col-desktop grid--quarter-max{% endif %}{% if block.settings.collection1.all_products_count > 2 and block.settings.swipe_on_mobile and block.settings.products_to_show > 2 %} mobile_slider{% endif %}{% if block.settings.show_view_all == false or block.settings.collection1.products.size < block.settings.products_to_show %} negative-margin{% endif %}{% if block.settings.show_view_all and block.settings.collection1.products.size > block.settings.products_to_show %} negative-margin--small{% endif %}" role="list">
+      {%- for product in block.settings.collection1.products limit: block.settings.products_to_show -%}
+        <li class="grid__item{% if block.settings.collection1.all_products_count > 2 and block.settings.swipe_on_mobile and block.settings.products_to_show > 2 %} slider__slide{% endif %}">
+          {% render 'product-card',
+            product_card_product: product,
+            media_size: section.settings.image_ratio,
+            show_secondary_image: section.settings.show_secondary_image,
+            add_image_padding: section.settings.add_image_padding,
+            show_vendor: section.settings.show_vendor,
+            show_image_outline: section.settings.show_image_outline,
+            show_rating: section.settings.show_rating,
+            show_swatches: section.settings.show_variants_swatches
+          %}
+          
+        </li>
+        
+      {%- else -%}
+        {%- for i in (1..4) -%}
+          <li class="grid__item">
+            {% render 'product-card-placeholder' %}
+          </li>
+        {%- endfor -%}
+      {%- endfor -%}
+      </ul>
+      {% if block.settings.collection1.url != blank  %}
+        <div class="tabs_button_all center">
+        <a href="{{ block.settings.collection1.url }}"  class="button button--secondary" aria-label="{{ 'sections.featured_collection.view_all_label' | t: collection_name: section.settings.collection.title }}">
+          {{ 'sections.featured_collection.view_all' | t }}
+        </a>
+        </div>
+      {% endif %}
+
+    {% endif %}
+    <!-- collection 1 end   -->
+
+</div>
+
+
+<div class="c_tabs collection_tab_2 tabss-2" data-body-val="{{ block.settings.tabs2 | handleize }}">
+
+
+    <!-- Collection 2 -->
+
+    {% if block.settings.collection2 != "blank" %}
+
+    <ul class="grid grid--2-col product-grid{% if products_to_display == 4 or block.settings.collection2 == blank %} grid--2-col-tablet grid--4-col-desktop{% else %} grid--3-col-tablet{% endif %}{% if products_to_display > 5 %} grid--one-third-max grid--4-col-desktop grid--quarter-max{% endif %}{% if block.settings.collection2.all_products_count > 2 and block.settings.swipe_on_mobile and block.settings.products_to_show > 2 %} mobile_slider{% endif %}{% if block.settings.show_view_all == false or block.settings.collection2.products.size < block.settings.products_to_show %} negative-margin{% endif %}{% if block.settings.show_view_all and block.settings.collection2.products.size > block.settings.products_to_show %} negative-margin--small{% endif %}" role="list">
+      {%- for product in block.settings.collection2.products limit: block.settings.products_to_show -%}
+      <li class="grid__item{% if block.settings.collection2.all_products_count > 2 and block.settings.swipe_on_mobile and block.settings.products_to_show > 2 %} slider__slide{% endif %}">
+    {% render 'product-card',
+    product_card_product: product,
+    media_size: section.settings.image_ratio,
+    show_secondary_image: section.settings.show_secondary_image,
+    add_image_padding: section.settings.add_image_padding,
+    show_vendor: section.settings.show_vendor,
+    show_image_outline: section.settings.show_image_outline,
+    show_rating: section.settings.show_rating,
+    show_swatches: section.settings.show_variants_swatches
+    %}
+    
+    </li>
+    
+    {%- else -%}
+    {%- for i in (1..4) -%}
+    <li class="grid__item">
+    {% render 'product-card-placeholder' %}
+    </li>
+    {%- endfor -%}
+    {%- endfor -%}
+    </ul>
+    {% if block.settings.collection2.url != blank  %}
+    <div class="tabs_button_all center">
+      <a href="{{ block.settings.collection2.url }}"  class="button button--secondary" aria-label="{{ 'sections.featured_collection.view_all_label' | t: collection_name: section.settings.collection.title }}">
+    {{ 'sections.featured_collection.view_all' | t }}
+    </a>
+    </div>
+    {% endif %}
+    
+    {% endif %}
+
+    <!-- collection 2 end   -->
+  </div>
+  <div class="c_tabs collection_tab_3 tabss-3" data-body-val="{{ block.settings.tabs3 | handleize }}">
+    <!-- collection 3   -->
+
+    {% if block.settings.collection3 != "blank" %}
+
+    <ul class="grid grid--2-col product-grid{% if products_to_display == 4 or block.settings.collection3 == blank %} grid--2-col-tablet grid--4-col-desktop{% else %} grid--3-col-tablet{% endif %}{% if products_to_display > 5 %} grid--one-third-max grid--4-col-desktop grid--quarter-max{% endif %}{% if block.settings.collection3.all_products_count > 2 and block.settings.swipe_on_mobile and block.settings.products_to_show > 2 %} mobile_slider{% endif %}{% if block.settings.show_view_all == false or block.settings.collection3.products.size < block.settings.products_to_show %} negative-margin{% endif %}{% if block.settings.show_view_all and block.settings.collection3.products.size > block.settings.products_to_show %} negative-margin--small{% endif %}" role="list">
+      {%- for product in block.settings.collection3.products limit: block.settings.products_to_show -%}
+      <li class="grid__item{% if block.settings.collection3.all_products_count > 2 and block.settings.swipe_on_mobile and block.settings.products_to_show > 2 %} slider__slide{% endif %}">
+    {% render 'product-card',
+    product_card_product: product,
+    media_size: section.settings.image_ratio,
+    show_secondary_image: section.settings.show_secondary_image,
+    add_image_padding: section.settings.add_image_padding,
+    show_vendor: section.settings.show_vendor,
+    show_image_outline: section.settings.show_image_outline,
+    show_rating: section.settings.show_rating,
+    show_swatches: section.settings.show_variants_swatches
+    %}
+    
+    </li>
+    
+    {%- else -%}
+    {%- for i in (1..4) -%}
+    <li class="grid__item">
+    {% render 'product-card-placeholder' %}
+    </li>
+    {%- endfor -%}
+    {%- endfor -%}
+    </ul>
+    {% if block.settings.collection3.url != blank  %}
+    <div class="tabs_button_all center">
+      <a href="{{ block.settings.collection3.url }}"  class="button button--secondary" aria-label="{{ 'sections.featured_collection.view_all_label' | t: collection_name: section.settings.collection.title }}">
+    {{ 'sections.featured_collection.view_all' | t }}
+    </a>
+    </div>
+    {% endif %}
+    
+    {% endif %}
+
+
+    <!-- collection 3 end   -->
+  </div>
+  <div class="c_tabs collection_tab_4 tabss-4" data-body-val="{{ block.settings.tabs4 | handleize }}">
+
+
+  
+    <!-- collection 4   -->
+
+    {% if block.settings.collection4 != "blank" %}
+
+    <ul class="grid grid--2-col product-grid{% if products_to_display == 4 or block.settings.collection4 == blank %} grid--2-col-tablet grid--4-col-desktop{% else %} grid--3-col-tablet{% endif %}{% if products_to_display > 5 %} grid--one-third-max grid--4-col-desktop grid--quarter-max{% endif %}{% if block.settings.collection4.all_products_count > 2 and block.settings.swipe_on_mobile and block.settings.products_to_show > 2 %} mobile_slider{% endif %}{% if block.settings.show_view_all == false or block.settings.collection4.products.size < block.settings.products_to_show %} negative-margin{% endif %}{% if block.settings.show_view_all and block.settings.collection4.products.size > block.settings.products_to_show %} negative-margin--small{% endif %}" role="list">
+      {%- for product in block.settings.collection4.products limit: block.settings.products_to_show -%}
+      <li class="grid__item{% if block.settings.collection4.all_products_count > 2 and block.settings.swipe_on_mobile and block.settings.products_to_show > 2 %} slider__slide{% endif %}">
+    {% render 'product-card',
+    product_card_product: product,
+    media_size: section.settings.image_ratio,
+    show_secondary_image: section.settings.show_secondary_image,
+    add_image_padding: section.settings.add_image_padding,
+    show_vendor: section.settings.show_vendor,
+    show_image_outline: section.settings.show_image_outline,
+    show_rating: section.settings.show_rating,
+    show_swatches: section.settings.show_variants_swatches
+    %}
+    
+    </li>
+    
+    {%- else -%}
+    {%- for i in (1..4) -%}
+    <li class="grid__item">
+    {% render 'product-card-placeholder' %}
+    </li>
+    {%- endfor -%}
+    {%- endfor -%}
+    </ul>
+    {% if block.settings.collection4.url != blank  %}
+    <div class="tabs_button_all center">
+      <a href="{{ block.settings.collection4.url }}"  class="button button--secondary" aria-label="{{ 'sections.featured_collection.view_all_label' | t: collection_name: section.settings.collection.title }}">
+    {{ 'sections.featured_collection.view_all' | t }}
+    </a>
+    </div>
+    {% endif %}
+    
+    {% endif %}
+
+
+    <!-- collection 4 end   -->
+  </div>
+
+  <div class="c_tabs collection_tab_5 tabss-5" data-body-val="{{ block.settings.tabs5 | handleize }}">
+    <!-- collection 5   -->
+
+{% if block.settings.collection5 != "blank" %}
+
+<ul class="grid grid--2-col product-grid{% if products_to_display == 4 or block.settings.collection5 == blank %} grid--2-col-tablet grid--4-col-desktop{% else %} grid--3-col-tablet{% endif %}{% if products_to_display > 5 %} grid--one-third-max grid--4-col-desktop grid--quarter-max{% endif %}{% if block.settings.collection5.all_products_count > 2 and block.settings.swipe_on_mobile and block.settings.products_to_show > 2 %} mobile_slider{% endif %}{% if block.settings.show_view_all == false or block.settings.collection5.products.size < block.settings.products_to_show %} negative-margin{% endif %}{% if block.settings.show_view_all and block.settings.collection5.products.size > block.settings.products_to_show %} negative-margin--small{% endif %}" role="list">
+{%- for product in block.settings.collection5.products limit: block.settings.products_to_show -%}
+<li class="grid__item{% if block.settings.collection5.all_products_count > 2 and block.settings.swipe_on_mobile and block.settings.products_to_show > 2 %} slider__slide{% endif %}">
+{% render 'product-card',
+product_card_product: product,
+media_size: section.settings.image_ratio,
+show_secondary_image: section.settings.show_secondary_image,
+add_image_padding: section.settings.add_image_padding,
+show_vendor: section.settings.show_vendor,
+show_image_outline: section.settings.show_image_outline,
+show_rating: section.settings.show_rating,
+show_swatches: section.settings.show_variants_swatches
+%}
+
+</li>
+
+{%- else -%}
+{%- for i in (1..4) -%}
+<li class="grid__item">
+{% render 'product-card-placeholder' %}
+</li>
+{%- endfor -%}
+{%- endfor -%}
+</ul>
+{% if block.settings.collection5.url != blank  %}
+<div class="tabs_button_all center">
+<a href="{{ block.settings.collection5.url }}"  class="button button--secondary" aria-label="{{ 'sections.featured_collection.view_all_label' | t: collection_name: section.settings.collection.title }}">
+{{ 'sections.featured_collection.view_all' | t }}
+</a>
+</div>
+{% endif %}
+
+{% endif %}
+
+
+    <!-- collection 5 end   -->
+
+  </div>
+
+</div>  
+
+          
+
+
+        </div>
+      
+      {% endfor %}
+    </div>
+    </div>
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+{% schema %}
+{
+  "name": "Custom Collection Tabs",
+  "tag": "section",
+  "class": "spaced-section custom_collectionss_tabss",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Featured collection",
+      "label": "t:sections.featured-collection.settings.title.label"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description"
+    },
+    
+    
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4,
+      "label": "t:sections.featured-collection.settings.products_to_show.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "default": true,
+      "label": "t:sections.featured-collection.settings.show_view_all.label"
+    },
+    
+    {
+      "type": "header",
+      "content": "t:sections.featured-collection.settings.header.content"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.featured-collection.settings.image_ratio.options__1.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.featured-collection.settings.image_ratio.options__2.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.featured-collection.settings.image_ratio.options__3.label"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.featured-collection.settings.image_ratio.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "default": false,
+      "label": "t:sections.featured-collection.settings.show_secondary_image.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "add_image_padding",
+      "default": false,
+      "label": "t:sections.featured-collection.settings.add_image_padding.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image_outline",
+      "default": true,
+      "label": "t:sections.featured-collection.settings.show_image_outline.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": false,
+      "label": "t:sections.featured-collection.settings.show_vendor.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": false,
+      "label": "t:sections.featured-collection.settings.show_rating.label",
+      "info": "t:sections.featured-collection.settings.show_rating.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_variants_swatches",
+      "default": false,
+      "label": "Show Swatch"
+    }
+    
+    
+
+  ],
+  "blocks":[
+    {
+      "type":"collection",
+      "name":"collection",
+      "settings":[
+      {
+        "type":"text",
+        "id":"tabs",
+        "label":"Main Tab Name"
+      },
+      {
+        "type": "collection",
+        "id": "collection1",
+        "label": "Collection 1"
+      },
+      {
+        "type": "collection",
+        "id": "collection2",
+        "label": "Collection 2"
+      },
+      {
+        "type": "collection",
+        "id": "collection3",
+        "label": "Collection 3"
+      },
+      {
+        "type": "collection",
+        "id": "collection4",
+        "label": "Collection 4"
+      },
+      {
+        "type": "collection",
+        "id": "collection5",
+        "label": "Collection 5"
+      },
+      {
+        "type":"text",
+        "id":"tabs1",
+        "label":"Collection Tab 1 Name"
+      },
+      {
+        "type":"text",
+        "id":"tabs2",
+        "label":"Collection Tab 2 Name"
+      },
+      {
+        "type":"text",
+        "id":"tabs3",
+        "label":"Collection Tab 3 Name"
+      },
+      {
+        "type":"text",
+        "id":"tabs4",
+        "label":"Collection Tab 4 Name"
+      },
+      {
+        "type":"text",
+        "id":"tabs5",
+        "label":"Collection Tab 5 Name"
+      },
+        {
+          "type": "range",
+          "id": "products_to_show",
+          "min": 2,
+          "max": 12,
+          "step": 1,
+          "default": 4,
+          "label": "t:sections.featured-collection.settings.products_to_show.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_view_all",
+          "default": true,
+          "label": "t:sections.featured-collection.settings.show_view_all.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "swipe_on_mobile",
+          "default": false,
+          "label": "Enable Slider"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Collection Tabs"
+    }
+  ]
+}
+{% endschema %}
